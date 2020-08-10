@@ -1,0 +1,43 @@
+<canvas id="canvas1" width="300" height="300"></canvas>
+
+
+<script>
+    // Speichere Canvas in Variabel
+    var canvas = document.getElementById('canvas1');
+    // Erhalte 2D-Kontext, also X und Y-Achse
+    var ctx = canvas.getContext('2d');
+
+    // Erzeuge Variabel für X und Y Position im Canvas mit Startwert 50
+    var x = 50;
+    var y = 50;
+
+    // Setze Game-Funktion in Loop
+    setInterval(game, 1000/30)
+
+    // Erzeuge Game-Funktion
+    function game() {
+      // Überschreibe das Feld
+      ctx.clearRect(0,0,300,300);
+      // Setze Rechteck an X und Y Koordinate mit der Grösse 50x50
+      ctx.fillRect(x,y,50,50);
+    }
+
+    //Erzeuge Evenlistener welcher auf Tastenschläge (Pfeiltasten) reagiert
+    //und die Koordinaten verändert
+    document.onkeydown = function(evt) {
+      switch (evt.keyCode) {
+        case 37:
+          x -= 1;
+          break;
+        case 38:
+          y -= 1;
+          break;
+        case 39:
+          x += 1;
+          break;
+        case 40:
+          y += 1;
+          break;
+      }
+    }
+</script>
