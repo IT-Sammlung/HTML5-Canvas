@@ -5,6 +5,7 @@
     <title>Test</title>
   </head>
   <body>
+
     <style>
       body {
         background-color: black;
@@ -25,21 +26,13 @@
     <div id="wrapper"> <canvas width="600" height="600" id="canvas"></canvas></div>
 
 
+
+
     <script>
-
-        // Speichere Canvas in Variabel und erhalte 2D Kontext
-        var ctx = document.getElementById('canvas').getContext('2d');
-
-        // Erzeuge Variabel für X und Y Position im Canvas mit Startwert 50
-        var posX = 300;
-        var posY = 300;
-
         //Tile Grösse
         var tileW = 60, tileH = 60;
-
-        //Map-Grösse
+        //Map-Grösse (in Tiles)
         var mapW = 10, mapH = 10;
-
         //Map
         var map = [
           1,1,1,1,1,1,1,1,1,1,
@@ -54,33 +47,36 @@
           1,1,1,1,1,1,1,1,1,1
         ];
 
-        // Erzeuge Game-Funktion
+
+        // Game Funktion
         function game() {
+          // Speichere Canvas in Variabel und erhalte 2D Kontext
+          var ctx = document.getElementById('canvas').getContext('2d');
+          // Leere das Canvas bevor drauf gezeichnet wird
           ctx.clearRect(0,0,canvas.width,canvas.height);
-
-                    for(y=0;y<mapH;y++){
-                      for(x=0;x<mapW;x++) {
-                        switch(map[((y*mapW)+x)]) {
-                          case 0:
-                            ctx.fillStyle = 'green';
-                            break;
-                          case 1:
-                            ctx.fillStyle = 'gray';
-                            break;
-                        }
-                        ctx.fillRect(x*tileW,y*tileH,tileW,tileH);
-                      }
-                    }
-                    ctx.fillStyle = 'black';
-                    ctx.fillRect(posX,posY,5,5);
-
+          // 2-Dimensionaler Arrayloop durch map
+          for(y=0;y<mapH;y++){
+            for(x=0;x<mapW;x++) {
+              switch(map[((y*mapW)+x)]) {
+                case 0:
+                  ctx.fillStyle = 'green';
+                  break;
+                case 1:
+                  ctx.fillStyle = 'gray';
+                  break;
+              }
+              // Erzeuge Tiles
+              ctx.fillRect(x*tileW,y*tileH,tileW,tileH);
+            }
+          }
           requestAnimationFrame(game);
-        }
-
-
+      }
 
         // Setze Game-Funktion in Loop
         requestAnimationFrame(game);
+
+
+
 
         //Erzeuge Evenlistener welcher auf Tastenschläge (Pfeiltasten) reagiert
         //und die Koordinaten verändert
@@ -100,6 +96,10 @@
               break;
           }
         }
+
+
+
+
     </script>
   </body>
 </html>
