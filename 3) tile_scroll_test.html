@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+  </head>
+  <body>
+    <style>
+      body {
+        background-color: black;
+      }
+      #wrapper {
+        width: 100%;
+        height: 90vh;
+        text-align: center;
+      }
+      #canvas {
+        background-color: black;
+        border: 1px solid blue;
+        margin: 0 auto;
+        margin-top: 10vh;
+      }
+      </style>
+    <div id="wrapper"> <canvas width="600" height="600" id="canvas"></canvas></div>
+    <script>
+
+        // Get Canvas
+        var ctx = document.getElementById('canvas').getContext('2d');
+        //Tile Grösse
+        var tile = 60;
+        //Map-Grösse (in Tiles)
+        var mapSize = 20;
+        //Map
+        var map = [
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        	1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
+        	1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
+        	1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1,
+        	1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1,
+        	1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+        	1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1,
+        	1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        	1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        	1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+        	1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1,
+        	1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1,
+        	1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ];
+        //Track movement
+        var steuerung = {
+          moveUp: false,
+          moveRight: false,
+          moveBottom: false,
+          moveLeft: false
+          };
+        //Player
+        var player = {
+          x    :300,
+          y    :300
+        };
+        //Camera
+        var kamera = {
+          x    :0,
+          y    :0
+        }
+        // Loop
+        function loop() {
+          // Clear Canvas
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          // 2d loop
+          for(y=0;y<mapSize;y++){
+            for(x=0;x<mapSize;x++) {
+              // Change color for map field type
+              switch(map[((y*mapSize)+x)]) {
+                case 0:
+                  ctx.fillStyle = 'green';
+                  break;
+                case 1:
+                  ctx.fillStyle = 'gray';
+                  break;
+              }
+              // create tiles
+              ctx.fillRect(x*tile-kamera.x,y*tile-kamera.y,tile,tile);
+            }
+          }
+          //Create Player
+          ctx.fillStyle = 'black';
+          ctx.fillRect(player.x,player.y,25,25);
+          //movement
+          if(steuerung.moveLeft == true) {
+            kamera.x -= 2;
+          } else if(steuerung.moveRight == true) {
+            kamera.x += 2;
+          } else if(steuerung.moveUp == true) {
+            kamera.y -= 2;
+          } else if(steuerung.moveBottom == true) {
+            kamera.y += 2;
+          }
+          requestAnimationFrame(loop);
+      }
+        // Setze Game-Funktion in Loop
+        requestAnimationFrame(loop);
+
+
+        // If Keys get pressed
+        document.onkeydown = function(evt) {
+          switch (evt.keyCode) {
+            case 37:
+              steuerung.moveLeft = true;
+              console.log(player.x);
+              break;
+            case 38:
+              steuerung.moveUp = true;
+              break;
+            case 39:
+              steuerung.moveRight = true;
+              console.log(player.x);
+              break;
+            case 40:
+              steuerung.moveBottom = true;
+              break;
+          }
+        }
+        //If Keys not pressed
+        document.onkeyup = function(evt2) {
+          switch (evt2.keyCode) {
+            case 37:
+              steuerung.moveLeft = false;
+              break;
+            case 38:
+              steuerung.moveUp = false;
+              break;
+            case 39:
+              steuerung.moveRight = false;
+              break;
+            case 40:
+              steuerung.moveBottom = false;
+              break;
+          }
+        }
+    </script>
+  </body>
+</html>
