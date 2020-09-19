@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>test</title>
+    <style>
+      html, body {
+        margin: 0;
+        width: 100%; height: 100%;
+        background-color: black;
+        text-align: center;
+      }
+      #canvas {
+        margin-top: 50px;
+        background-color: black;
+        border: 1px solid purple;
+        background-image: url('city.png');
+      }
+    </style>
+  </head>
+<body>
+  <canvas id="canvas" width="1000" height="800"></canvas>
+  <script type="text/javascript">
+    // Get Canvas
+    var ctx = document.getElementById('canvas').getContext('2d');
+    // Map
+    var tileSize = 64;
+    var tiles = 11;
+    var map = [
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    ];
+    var mouseX = 0;
+    var mouseY = 0;
+    var tileX = 0;
+    var tileY = 0;
+    // Style
+    ctx.fillStyle='white';
+    ctx.strokeStyle='darkgray';
+    ctx.font ='30px Arial';
+    // loop
+    function loop(){
+      // Draw floor
+      ctx.clearRect(0,0,1000,800);
+      for(y=0.5;y<tiles+0.5;y++){
+        for(x=2;x<tiles+2;x++){
+          if(tileX+2 == x) {
+            if(tileY+0.5 == y) {
+              ctx.fillStyle='lightblue';
+            }
+          } else {
+            ctx.fillStyle='white';
+          }
+          ctx.strokeRect(x*tileSize,y*tileSize,tileSize,tileSize);
+          ctx.fillRect(x*tileSize,y*tileSize,tileSize,tileSize);
+        }
+      }
+      ctx.fillText('x' + tileX + 'y' + tileY, 850, 50);
+      window.requestAnimationFrame(loop);
+    }
+    loop();
+
+    canvas.addEventListener('mousemove', function(e){
+      var rect = canvas.getBoundingClientRect();
+      mouseX = Math.round((e.clientX - rect.left) / (rect.right - rect.left) * canvas.width)-2*tileSize;
+      mouseY = Math.round((e.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height)-0.5*tileSize;
+      tileX = Math.floor(mouseX/tileSize);
+      tileY = Math.floor(mouseY/tileSize);
+    })
+
+  </script>
+</body>
+</html>
