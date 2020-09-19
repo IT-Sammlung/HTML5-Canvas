@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>test</title>
+    <title>WekaGames</title>
     <style>
       html, body {
         margin: 0;
@@ -47,10 +47,18 @@
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ];
+    //Maus
     var mouseX = 0;
     var mouseY = 0;
     var tileX = 0;
     var tileY = 0;
+    //Player
+    function Player() {
+      this.pos = [0,0];
+      this.moveTo = [0,0];
+      this.size = tileSize/2;
+    }
+    var player = new Player();
     // Style
     ctx.fillStyle='white';
     ctx.strokeStyle='darkgray';
@@ -61,6 +69,7 @@
       ctx.clearRect(0,0,1000,800);
       for(y=0.5;y<tiles+0.5;y++){
         for(x=2;x<tiles+2;x++){
+          // Hover Effekt
           if(tileX+2 == x) {
             if(tileY+0.5 == y) {
               ctx.fillStyle='lightblue';
@@ -72,11 +81,36 @@
           ctx.fillRect(x*tileSize,y*tileSize,tileSize,tileSize);
         }
       }
+      // Spawn Player
+      ctx.fillStyle = 'black';
+      ctx.fillRect(player.pos[0]*tileSize+(2*tileSize)+((tileSize/2)/2),player.pos[1]*tileSize+(0.5*tileSize)+((tileSize/2)/2),player.size,player.size);
+      ctx.fillStyle = 'white';
+
+      if(player.pos[0] !== player.moveTo[0] || player.pos[1] !== player.moveTo[1]) {
+        if((player.pos[0] - player.moveTo[0]) < 0) {
+          var diff = player.moveTo[0] - player.pos[0];
+          player.pos[0] += 0.025;
+        }
+        if((player.pos[0] - player.moveTo[0]) > 0) {
+          var diff = player.pos[0] - player.moveTo[0];
+          player.pos[0] -= 0.025;
+        }
+        if((player.pos[1] - player.moveTo[1]) < 0) {
+          var diff = player.pos[1] - player.moveTo[1];
+          player.pos[1] += 0.025;
+        }
+        if((player.pos[1] - player.moveTo[1]) > 0) {
+          var diff = player.moveTo[1] - player.pos[1];
+          player.pos[1] -= 0.025;
+        }
+      }
+
+      //Position Text
       ctx.fillText('x' + tileX + 'y' + tileY, 850, 50);
       window.requestAnimationFrame(loop);
     }
     loop();
-
+    //Maus
     canvas.addEventListener('mousemove', function(e){
       var rect = canvas.getBoundingClientRect();
       mouseX = Math.round((e.clientX - rect.left) / (rect.right - rect.left) * canvas.width)-2*tileSize;
@@ -85,6 +119,11 @@
       tileY = Math.floor(mouseY/tileSize);
     })
 
+    canvas.addEventListener('mousedown', function(e) {
+      if(tileX >= 0 && tileX <= tiles-1 && tileY >= 0 && tileY <= tiles-1){
+        player.moveTo[0] = tileX; player.moveTo[1] = tileY;
+      }
+    })
   </script>
 </body>
 </html>
