@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Snake</title>
+    <style>
+      html, body {
+        width: 100%; height: 70%;
+        margin: 0; padding: 0;
+        background-color: black; color: white;
+        text-align: center;
+      }
+      p {
+        margin-bottom: 0;
+        margin-top: 3px;
+      }
+      #canvas {
+        margin-top: 10px;
+        background-color: gray;
+        border: 2px solid darkblue;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Snake by me </p>
+    <p>________________________/ O  \___/</p>
+    <p><_____________________________/   \</p>
+    <canvas id="canvas" width="800" height="800"></canvas>
+
+
+
+    <script>
+
+    can = document.getElementById('canvas');
+    ctx = can.getContext('2d');
+
+    snake = {
+      direction: 'none',
+      size: 25,
+      body: [
+        [50,50], //Tail
+        [75,50] //Head
+      ]
+    }
+
+    food = {
+      pos: [300,200],
+      size: 25
+    }
+
+
+    function loop(){
+      //clear canvas
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      //points
+      ctx.font = "18px Arial";
+      ctx.fillText('Punkte: ' + (snake.body.length-2),650,20);
+      //draw snake
+      ctx.fillStyle = 'black';
+      for(let i=0;i<snake.body.length;i++) {
+        ctx.fillRect(snake.body[i][0],snake.body[i][1],snake.size,snake.size);
+      }
+      //get head position
+      head = snake.body[(snake.body.length -1)];
+      //get body part for collision detection
+      body = snake.body.filter(function(e) { return e !== head });
+      //add keyboard
+      keyboard(head);
+      //draw food
+      ctx.fillStyle = 'darkred';
+      ctx.fillRect(food.pos[0],food.pos[1],food.size,food.size);
+      //eat food
+      if(head[0] == food.pos[0] && head[1] == food.pos[1]) {
+        food.pos = [(Math.floor(Math.random() * 32)*25),(Math.floor(Math.random() * 32)*25)];
+        snake.body.unshift([head[0],head[1]]);
+      }
+      //collision
+      for(let i=0;i<body.length;i++) {
+        if(body[i][0] == head[0] && body[i][1] == head[1]) {
+          location.reload();
+        }
+      }
+      //border collision
+
+    }
+
+    setInterval(loop, 1000/10);
+
+
+    document.onkeydown = function() {
+      switch(event.keyCode) {
+        case 37:
+          if(snake.direction !== 'right') {
+            snake.direction = 'left';
+          }
+        break;
+        case 38:
+          if(snake.direction !== 'down') {
+            snake.direction = 'up';
+          }
+        break;
+        case 39:
+          if(snake.direction !== 'left') {
+            snake.direction = 'right';
+          }
+        break;
+        case 40:
+          if(snake.direction !== 'up') {
+            snake.direction = 'down';
+          }
+        break;
+      }
+    }
+
+    function keyboard(head) {
+      if(snake.direction == 'left') {
+        snake.body.push([head[0]-snake.size,head[1]]);
+        snake.body.shift();
+      } else if(snake.direction == 'up') {
+        snake.body.push([head[0],head[1]-snake.size]);
+        snake.body.shift();
+      } else if(snake.direction == 'right') {
+        snake.body.push([head[0]+snake.size,head[1]]);
+        snake.body.shift();
+      } else if(snake.direction == 'down') {
+        snake.body.push([head[0],head[1]+snake.size]);
+        snake.body.shift();
+      }
+    }
+
+    </script>
+
+
+  </body>
+</html>
